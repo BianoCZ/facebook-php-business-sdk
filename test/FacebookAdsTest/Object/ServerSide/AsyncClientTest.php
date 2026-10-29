@@ -28,9 +28,6 @@ use FacebookAdsTest\AbstractUnitTestCase;
 use FacebookAds\Object\ServerSide\AsyncClient;
 use FacebookAds\Api;
 
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\CurlHandler;
-
 Api::init(null, null, 'access-token', false);
 
 class AsyncClientTest extends AbstractUnitTestCase {
@@ -41,18 +38,11 @@ class AsyncClientTest extends AbstractUnitTestCase {
     $this->assertEquals($client1, $client2);
   }
 
-  public function testCurlOptions() {
-    $async_client = AsyncClient::getInstance()->getClient();
-    $expected_handler = HandlerStack::create(new CurlHandler([
-      'options' => [
-        CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_TIMEOUT => 60,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HEADER => true,
-        CURLOPT_CAINFO => Api::instance()->getHttpClient()->getCaBundlePath(),
-      ]
-    ]));
+  public function testRequestOptions() {
+    $config = AsyncClient::getInstance()->getClient()->getConfig();
 
-    $this->assertEquals($expected_handler, $async_client->getConfig()['handler']);
+    $this->assertSame(10, $config['connect_timeout']);
+    $this->assertSame(60, $config['timeout']);
+    $this->assertSame(Api::instance()->getHttpClient()->getCaBundlePath(), $config['verify']);
   }
 }

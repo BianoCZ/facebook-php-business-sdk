@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+### Changed
+- Allowed guzzlehttp/guzzle ^8.0
+### Fixed
+- AsyncClient passed its timeouts and CA bundle as CurlHandler options, which Guzzle 7 ignored and Guzzle 8 rejects
+- Replaced the GuzzleHttp json helpers removed in Guzzle 8 with native json_encode
 
 ## v25.0.2
 ### Added
